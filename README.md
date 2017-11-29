@@ -49,3 +49,25 @@ Here's where the way in which you organise your code matters. Functional program
 
 Explore using an HTTP mocking library like [`nock`](https://github.com/node-nock/nock) to "fake" the parts of your code that are not up to you. 
 
+## Day 2
+
+The goal of this stage is to introduce yourself to web servers and RESTful APIs. You'll have to build a server that serves all the data you fetched yesterday, paying special attention to responding with the correct headers (mainly `Content-Type` and `statusCode`). You'll also have to write a router function to direct requests and some controller functions to isolate the functionality of each API endpoint.
+
+Try to avoid having all your functionality in a single file. Split your codebase into different functions and organise them according to the MVC pattern.
+
+### Core Tasks
+
+1. Using Node's `http` module create a web server that responds with 'hello' when it receives a `GET` request on the path `/api`
+2. Add a `GET /handles` endpoint that serves a JSON object with all the Twitter handles you fetched from the `nc-twitter` server (you may store them locally rather than request them every time).
+3. Add a `GET /api/users/:userName` parametric endpoint that serves a JSON object with the specified user's profile data.
+4. Add a `GET /tweets/:userName` parametric endpoint that serves a JSON object with the specified user's tweets.
+5. Add a query parameter to your `GET /api/tweets/:userName` endpoint for the number of tweets you want to respond with, e.g. `GET /api/tweets/northcoders?count=20`. How should the endpoint respond by default (i.e. when not provided the query parameter)? How should it behave when provided an invalid parameter? What status code should your server respond with?
+6. Add some error handling to your server. What happens when you receive a request for a user that doesn't exist? What status code should you respond with?
+
+### Advanced Tasks
+
+1. Let's say that you want to make a request to your server to add a new user to the list of user handles. Make a `POST /users` endpoint that receives a request with a user's name, adds it to your list of handles and automatically fetches that user's data so that it's available for requesting. Where in the request should the new user's handle be placed?
+2. Add a `PATCH /users/:userName` endpoint to update the value of a users handle (this should trigger the fetching of the new handle's data and delete the data for the old one).
+3. Add a `DELETE /users/:userName` endpoint to delete a user's handle from the list and their data.
+4. Add and endpoint that will allow to post a tweet to the real Twitter from an HTTP request (keep in mind that you'll only be able to post a tweet on the owner of the credentials' account).
+
