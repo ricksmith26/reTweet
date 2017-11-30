@@ -64,6 +64,14 @@ Try to avoid having all your functionality in a single file. Split your codebase
 5. Add a query parameter to your `GET /api/tweets/:userName` endpoint for the number of tweets you want to respond with, e.g. `GET /api/tweets/northcoders?count=20`. How should the endpoint respond by default (i.e. when not provided the query parameter)? How should it behave when provided an invalid parameter? What status code should your server respond with?
 6. Add some error handling to your server. What happens when you receive a request for a user that doesn't exist? What status code should you respond with?
 
+#### Resources
+- [Anatomy of an HTTP Transaction](https://nodejs.org/en/docs/guides/anatomy-of-an-http-transaction/)
+- Documentation for:
+  - [Node `http` module](https://nodejs.org/api/http.html)
+  - [Method: createServer](https://nodejs.org/api/http.html#http_http_createserver_requestlistener)
+  - [Class: IncomingMessage](https://nodejs.org/api/http.html#http_class_http_incomingmessage) (a.k.a. request)
+  - [Class: ServerResponse](https://nodejs.org/api/http.html#http_class_http_serverresponse) (a.k.a. response)
+
 ### Advanced Tasks
 
 1. Let's say that you want to make a request to your server to add a new user to the list of user handles. Make a `POST /users` endpoint that receives a request with a user's name, adds it to your list of handles and automatically fetches that user's data so that it's available for requesting. Where in the request should the new user's handle be placed?
