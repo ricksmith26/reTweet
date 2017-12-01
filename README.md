@@ -79,3 +79,56 @@ Try to avoid having all your functionality in a single file. Split your codebase
 3. Add a `DELETE /users/:userName` endpoint to delete a user's handle from the list and their data.
 4. Add and endpoint that will allow to post a tweet to the real Twitter from an HTTP request (keep in mind that you'll only be able to post a tweet on the owner of the credentials' account).
 
+## Day 3
+
+It's time to make our web application render some views! So far our endpoints only respond with JSON data, but that's not very readable. It would be much more user friendly if we could respond with an HTML document that displays our data. To do that we'll create some view templates and a function that will populate them with the appropriate data.
+
+### Core tasks
+
+1. Have a go at rendering your first view. Make an HTML file for your home page and serve it on `GET /`.
+2. Make a template for a user's profile data. What data would you like to display from what you have available in your database? Hard code everything first (write the actual data) to see what it will look like. After that, replace the data that will be common to all users with strings like `{{ propertyName }}`. This are going to be the "blank spaces" that your templating function will target to replace.
+3. Write a templating function that given a view (a string containing your HTML template) and an object with data, will replace all instances of `{{ propertyName }}` with the corresponding properties. It should return the populated template as a string. Example:
+
+```js
+let myTemplate = "<h1>{{ screen_name }}</h1>";
+let myData = {
+  screen_name: "northcoders"
+};
+let populatedTemplate = populateTemplate(myTemplate, myData);
+// populatedTemplate ==> "<h1>northcoders</h1>"
+```
+
+4. Once your templating function is properly implemented (that means tested), create a view for a user's profile page.
+5. Create a view for a user's timeline of tweets. This will require you to add "for loop/forEach" functionality to your templating functionality in order to be able to replace an arbitrary number of tweets with data. Example:
+
+```js
+let tweetsTemplate = `
+<ul>
+  {{ forEach tweets }}
+  <li>{{ tweet.text }}</li>
+  {{ forEach end }}
+</ul>
+`
+let myData = {
+  tweets: [
+    { text: "My first tweet" },
+    { text: "Another tweet" }
+  ]
+};
+let populatedTemplate = populateTemplate(tweetsTemplate, myData);
+/* populatedTemplate:
+<ul>
+  <li>My first tweet</li>
+  <li>Another tweet</li>
+</ul>
+*/
+```
+6. Feel free to add links (`<a>` tags) to your templates as you see necessary for navigation.
+
+### Advanced Tasks
+
+1. If you've implemented the `POST /users` endpoint from Day 2, write a template with a submission form that will send the required POST request to submit a new user to the database.
+2. If you've implemented the `POST /tweets` endpoint from Day 2, write a template with a tweet submission form that will send the required POST request to submit a new tweet (to actual Twitter!). How would you go about validating that the submitted tweet doesn't exceed 140 characters?
+3. At this point you have a pretty solid base application to build whatever you want on top of it. Get creative and implement your own custom feature. Or spend some time maintaining and refactoring your previous code.
+
+
