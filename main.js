@@ -1,6 +1,7 @@
 const https = require("https");
 const URL = "https://northwitter-api-wqhhzdeecj.now.sh/handles";
 const Twit = require("twit");
+const fs = require("fs");
 const {
   consumer_key,
   consumer_secret,
@@ -36,7 +37,7 @@ const T = new Twit({
 //
 
 function fiftyTweets(arr, cb) {
-  const result = [];
+  const result = {};
   let count = 0;
   arr.forEach((handle, index) => {
     T.get(
@@ -49,10 +50,17 @@ function fiftyTweets(arr, cb) {
           for (let i = 0; i < data.length; i++) {
             arr.push(data[i].text);
           }
-          result.push(arr);
+          result[handle] = arr;
         }
 
-        if (count === arr.length - 1) cb(err, console.log(result));
+        if (count === arr.length - 1)
+          cb(
+            err,
+            fs.writeFile("./tweets.js", JSON.stringify(result), err => {
+              if (err) throw err;
+              console.log("nice file, bro!");
+            })
+          );
       }
       //const tweets = data.map(tweetObj => tweetObj.text);
       //console.log(tweets);
