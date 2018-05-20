@@ -1,29 +1,29 @@
-const https = require("https");
-const URL = "https://northwitter-api-wqhhzdeecj.now.sh/handles";
-const Twit = require("twit");
-const fs = require("fs");
+const https = require('https');
+const URL = 'https://northwitter-api-wqhhzdeecj.now.sh/handles';
+const Twit = require('twit');
+const fs = require('fs');
 const {
   consumer_key,
   consumer_secret,
   access_token,
   access_token_secret
-} = require("./config.js");
+} = require('./config.js');
 
 let ncHandles = [];
 
-https.get(URL, response => {
-  let body = "";
-  response.on("data", packet => {
-    body += packet;
-  });
-  response.on("end", () => {
-    ncHandles = JSON.parse(body).handles;
-    console.log(ncHandles);
-    fiftyTweets(ncHandles, (err, arr) => {
-      //console.log(arr);
-    });
-  });
-});
+// https.get(URL, response => {
+//   let body = '';
+//   response.on('data', packet => {
+//     body += packet;
+//   });
+//   response.on('end', () => {
+//     ncHandles = JSON.parse(body).handles;
+//     //console.log(ncHandles);
+//     fiftyTweets(ncHandles, (err, arr) => {
+//       //console.log(arr);
+//     });
+//   });
+// });
 
 const T = new Twit({
   consumer_key: consumer_key,
@@ -41,8 +41,8 @@ function fiftyTweets(arr, cb) {
   let count = 0;
   arr.forEach((handle, index) => {
     T.get(
-      "statuses/user_timeline",
-      { screen_name: handle, count: 50 },
+      'statuses/user_timeline',
+      { screen_name: handle, count: 10 },
       (err, data, response) => {
         if (Array.isArray(data)) {
           count++;
@@ -51,14 +51,15 @@ function fiftyTweets(arr, cb) {
             arr.push(data[i].text);
           }
           result[handle] = arr;
+          console.log((result[handle] = arr));
         }
 
         if (count === arr.length - 1)
           cb(
             err,
-            fs.writeFile("./tweets.js", JSON.stringify(result), err => {
+            fs.writeFile('./tweets.js', JSON.stringify(result), err => {
               if (err) throw err;
-              console.log("nice file, bro!");
+              console.log('nice file, bro!');
             })
           );
       }
@@ -67,3 +68,8 @@ function fiftyTweets(arr, cb) {
     );
   });
 }
+const coding = ['CoderDojo', 'JenniferDewalt', 'kittylyst'];
+
+fiftyTweets(coding, (err, arr) => {
+  //console.log(arr);
+});
