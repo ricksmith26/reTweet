@@ -17,7 +17,16 @@ const T = new Twit({
   access_token: access_token,
   access_token_secret: access_token_secret
 });
-const comment = ['Great tweet from '];
+const comment = [
+  'Great tweet from ',
+  'A good tweet for any coders ',
+  'For all you coders',
+  'Code, code, code, code....',
+  '1011001101010110....',
+  'Coding RT ',
+  'For those interested in coding ',
+  'Leanring to code? '
+];
 const queue = [
   '#nodejs',
   '#Nodejs',
@@ -40,6 +49,7 @@ const queue = [
   '#programming',
   '#webdesign',
   '#buildtheweb',
+  '100daysofcode',
   '#digitalnomad',
   '#meteorjs',
   '#hustle',
@@ -67,7 +77,11 @@ var retweet = function() {
       var retweetId = data.statuses[0].id_str;
       // Tell T to retweet
       var tweet = data.statuses[0];
-      var retweetBody = comment[0] + tweet.user.screen_name + ' ' + tweet.text;
+      var retweetBody =
+        comment[Math.floor(Math.random() * comment.length)] +
+        tweet.user.screen_name +
+        ' ' +
+        tweet.text;
 
       T.post('statuses/update', { status: retweetBody }, function(
         err,
@@ -93,13 +107,3 @@ var retweet = function() {
 };
 //setInterval(retweet, 5000);
 retweet();
-// T.post('media/metadata/create', meta_params, function (err, data, response) {
-//   if (!err) {
-//     // now we can reference the media and post a tweet (media will attach to the tweet)
-//     var params = { status: 'loving life #nofilter', id: retweetId  }
-
-//     T.post('statuses/update', params, function (err, data, response) {
-//       console.log(data)
-//     })
-//   }
-// })
