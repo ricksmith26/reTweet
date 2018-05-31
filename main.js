@@ -11,65 +11,95 @@ const {
 
 let ncHandles = [];
 
-// https.get(URL, response => {
-//   let body = '';
-//   response.on('data', packet => {
-//     body += packet;
-//   });
-//   response.on('end', () => {
-//     ncHandles = JSON.parse(body).handles;
-//     //console.log(ncHandles);
-//     fiftyTweets(ncHandles, (err, arr) => {
-//       //console.log(arr);
-//     });
-//   });
-// });
-
 const T = new Twit({
   consumer_key: consumer_key,
   consumer_secret: consumer_secret,
   access_token: access_token,
   access_token_secret: access_token_secret
 });
+const comment = ['Great tweet from '];
+const queue = [
+  '#nodejs',
+  '#Nodejs',
+  '#Northcoders',
+  '#CoderDojo',
+  '#workhardanywhere',
+  '#softwareengineering',
+  '#webdevelopment',
+  '#javascript',
+  '#mongodb',
+  '#workfromhome',
+  '#productivity',
+  '#freelancelife',
+  '#freelancer',
+  '#developerlife',
+  '#webdeveloper',
+  '#developer',
+  '#worldcode',
+  '#code',
+  '#programming',
+  '#webdesign',
+  '#buildtheweb',
+  '#digitalnomad',
+  '#meteorjs',
+  '#hustle',
+  '#workfromanywhere',
+  '#coding',
+  '#neverstop',
+  '#remotework',
+  '#hustlers',
+  '#tech',
+  '#coder',
+  '#programmer'
+];
+var retweet = function() {
+  var params = {
+    q: queue[Math.ceil(Math.random() * queue.length)],
+    result_type: 'recent',
+    lang: 'en'
+  };
 
-//
-//not broken above this point
-//
+  T.get('search/tweets', params, function(err, data) {
+    // if there no errors
+    if (!err) {
+      // grab ID of tweet to retweet
+      // console.log(data.statuses);
+      var retweetId = data.statuses[0].id_str;
+      // Tell T to retweet
+      var tweet = data.statuses[0];
+      var retweetBody = comment[0] + tweet.user.screen_name + ' ' + tweet.text;
 
-function fiftyTweets(arr, cb) {
-  const result = {};
-  let count = 0;
-  arr.forEach((handle, index) => {
-    T.get(
-      'statuses/user_timeline',
-      { screen_name: handle, count: 10 },
-      (err, data, response) => {
-        if (Array.isArray(data)) {
-          count++;
-          let arr = [];
-          for (let i = 0; i < data.length; i++) {
-            arr.push(data[i].text);
-          }
-          result[handle] = arr;
-          console.log((result[handle] = arr));
+      T.post('statuses/update', { status: retweetBody }, function(
+        err,
+        response
+      ) {
+        if (response) {
+          console.log('Retweeted!!!');
         }
-
-        if (count === arr.length - 1)
-          cb(
-            err,
-            fs.writeFile('./tweets.js', JSON.stringify(result), err => {
-              if (err) throw err;
-              console.log('nice file, bro!');
-            })
+        // if there was an error while tweeting
+        if (err) {
+          console.log(
+            'Something went wrong while RETWEETING... Duplication maybe...'
           );
-      }
-      //const tweets = data.map(tweetObj => tweetObj.text);
-      //console.log(tweets);
-    );
+        }
+      });
+    }
+    // if unable to Search a tweet
+    else {
+      console.log('Something went wrong while SEARCHING...');
+      console.log(err);
+    }
   });
-}
-const coding = ['CoderDojo', 'JenniferDewalt', 'kittylyst'];
+};
+//setInterval(retweet, 5000);
+retweet();
+// T.post('media/metadata/create', meta_params, function (err, data, response) {
+//   if (!err) {
+//     // now we can reference the media and post a tweet (media will attach to the tweet)
+//     var params = { status: 'loving life #nofilter', id: retweetId  }
 
-fiftyTweets(coding, (err, arr) => {
-  //console.log(arr);
-});
+//     T.post('statuses/update', params, function (err, data, response) {
+//       console.log(data)
+//     })
+//   }
+// })
